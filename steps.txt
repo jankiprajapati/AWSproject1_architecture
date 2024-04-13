@@ -1,0 +1,49 @@
+Steps For the Project
+----------------------
+1. Create an IAM User and Create Access Token
+
+  -> create provider.tf file
+  -> git clone 
+  -> terraform init,plan,apply
+
+1. Run the Terraform Script
+  
+  -> Creates VPC with 2 Private and 2 Public Subnet in us-east-1a and ua-east-1b
+  -> Internet-Gateway and NAT-Gateway is routed
+  -> Creates a S3 Bucket with name projbucket-494273343511
+  -> Creates a RDS in private subnet
+  -> Creates a Dynamo-DB Table with name employee_image_table and Partition key as empid(N)
+  -> Key-Pair for EC2 Instance 
+  -> Launches 2 ubuntu instances in both private subnet
+  -> IAM role for EC2 to access S3 and DynamoDB full access
+  -> Maps these instances to a Target-Group
+  -> Load-Balancer is deployed in public-subnet and mapped to the target-group
+  -> Bastion-Host is created in 1 public subnet
+  -> SNS is created
+  -> IAM role for lambda with s3 and sns full access
+  -> Lambda function is created with a python script and IAM role is created and added
+
+
+2. Connect to EC2 Instance in private subnet through bastion-host and key is on local-folder where terraform ran
+
+  -> wget https://github.com/Nikhil-tr/AWSProject1/raw/main/cmds.sh
+  -> bash cmds.sh
+  -> This installs all the required packages on ubuntu and the code is copied
+  -> add the required credentials on config.py
+  -> create a database and a table inside RDS
+  -> sudo python3 EmpApp.py 
+
+
+3. Lambda Function
+  
+  -> Add trigger as S3 bucket to the Lambda Function
+  -> paste SNS arn to the python-code at target arn and deploy
+  -> add subscriptions to sns
+
+
+4. Deletion
+  
+  -> empty the bucket
+  -> delete subscriptions on sns
+  -> delete the trigger s3 on lambda function
+  -> terraform destroy
